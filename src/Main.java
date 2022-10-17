@@ -71,6 +71,11 @@ public class Main {
                     lineScanner.close();
                     return readTableFileWithStep(filePath);
                 }
+                if (row[currentIndex].startsWith("(")) {
+                    scanner.close();
+                    lineScanner.close();
+                    return readTableFileWithBode(filePath);
+                }
                 currentIndex++;
             }
             scanner.close();
@@ -215,6 +220,43 @@ public class Main {
     }
 
     private String[][] readTableFileWithBode(String filePath) {
-        return null;
+        File file = new File(filePath);
+        Scanner lineScanner = null;
+        try {
+            lineScanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            System.err.println("file not found: "+filePath);
+            return null;
+        }
+        int columnsPerLine =0;
+        ArrayList<String[]> table = new ArrayList<>();
+        while (lineScanner.hasNextLine()) {
+            //Read line
+            Scanner scanner = new Scanner(lineScanner.nextLine());
+            scanner.useDelimiter("\t");
+            if (columnsPerLine == 0) {
+                ArrayList<String> row = new ArrayList<>(2);
+                while (scanner.hasNext()) {
+                    row.add(scanner.next());
+                }
+                columnsPerLine = row.size()*2-1;
+                table.add(new String[columnsPerLine]);
+                table.set(0,row.toArray(table.get(0)));
+                continue;
+            }
+            scanner.useDelimiter("[\tdB,(°)]+");
+            String[] row = new String[columnsPerLine];
+            int currentIndex =0;
+            while (scanner.hasNext()) {
+                row[currentIndex] = scanner.next();
+                currentIndex++;
+            }
+            scanner.close();
+            table.add(row);
+        }
+        lineScanner.close();
+        String[][] tableArray = new String[table.size()][];
+        tableArray = table.toArray(tableArray);
+        return tableArray;
     }
 }
