@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -50,7 +51,7 @@ public class Main {
             //Read line
             Scanner scanner = new Scanner(lineScanner.nextLine());
             //TODO bode
-            //scanner.useDelimiter("[\\p{javaWhitespace}(),]+");
+            scanner.useDelimiter("\t");
             if (columnsPerLine == 0) {
                 ArrayList<String> row = new ArrayList<>(2);
                 while (scanner.hasNext()) {
@@ -65,6 +66,11 @@ public class Main {
             int currentIndex =0;
             while (scanner.hasNext()) {
                 row[currentIndex] = scanner.next();
+                if (row[currentIndex].startsWith("Step Information: ")) {
+                    scanner.close();
+                    lineScanner.close();
+                    return readTableFileWithStep(filePath);
+                }
                 currentIndex++;
             }
             scanner.close();
@@ -125,5 +131,90 @@ public class Main {
             }
         }
         return min;
+    }
+
+    private String[][] readTableFileWithStep(String filePath) {
+        File file = new File(filePath);
+        Scanner lineScanner = null;
+        try {
+            lineScanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            System.err.println("file not found: "+filePath);
+            return null;
+        }
+        int columnsPerLine =0;
+        int columnsPerLineDataLine =0;
+        int totalRuns = 0;
+        ArrayList<String[]> table = new ArrayList<>();
+        lineLoop:
+        while (lineScanner.hasNextLine()) {
+            //Read line
+            Scanner scanner = new Scanner(lineScanner.nextLine());
+            scanner.useDelimiter("\t");
+            if (columnsPerLine == 0) {
+                ArrayList<String> row = new ArrayList<>(2);
+                while (scanner.hasNext()) {
+                    row.add(scanner.next());
+                }
+                columnsPerLine = row.size();
+                columnsPerLineDataLine = columnsPerLine;
+                table.add(new String[columnsPerLine]);
+                table.set(0,row.toArray(table.get(0)));
+                continue;
+            }
+            String[] row = new String[columnsPerLine];
+            int currentIndex =0;
+            boolean lineCorrect = true;
+            while (scanner.hasNext()) {
+                row[currentIndex] = scanner.next();
+                if (row[currentIndex].startsWith("Step Information: ")) {
+                    if (totalRuns == 0) {
+                        int runNumberStart = row[currentIndex].indexOf("(Run: 1/") + 8;
+                        int runNumberEnd = row[currentIndex].indexOf(")");
+                        totalRuns = Integer.decode(row[currentIndex].substring(runNumberStart, runNumberEnd));
+                        columnsPerLine = (columnsPerLineDataLine-1)*totalRuns+1;
+                        String[] newFirstLine = new String[columnsPerLine];
+
+                        table.set(0, Arrays.copyOf(table.get(0),columnsPerLine));
+                        lineCorrect = false;
+                        continue;
+                    } else {
+                        break lineLoop;
+                    }
+                }
+                currentIndex++;
+            }
+            scanner.close();
+            if (lineCorrect) {
+                table.add(row);
+            }
+        }
+        //readData from step 2...n
+        int currentRun = 2; //Counted from 1 ongoing
+        int currentColumn = 1; //first line is info comment
+        while (lineScanner.hasNextLine()) {
+            Scanner scanner = new Scanner(lineScanner.nextLine());
+            scanner.useDelimiter("\t");
+            if(scanner.next().startsWith("Step Information: ")) {//skip first colum because identical to step 1
+                currentRun++;
+                currentColumn = 1;
+                continue;
+            }
+            String[] row = table.get(currentColumn);
+            int currentIndex = 1;
+            while (scanner.hasNext()) {
+                row[currentIndex+(columnsPerLineDataLine-1)*(currentRun-1)] = scanner.next();
+                currentIndex++;
+            }
+            currentColumn++;
+        }
+        lineScanner.close();
+        String[][] tableArray = new String[table.size()][];
+        tableArray = table.toArray(tableArray);
+        return tableArray;
+    }
+
+    private String[][] readTableFileWithBode(String filePath) {
+        return null;
     }
 }
