@@ -36,7 +36,7 @@ public class Main {
         writer.close();
     }
 
-    private String[][] readTableFile(String filePath) {
+    protected String[][] readTableFile(String filePath) {
         File file = new File(filePath);
         Scanner lineScanner = null;
         try {
@@ -87,7 +87,7 @@ public class Main {
         return tableArray;
     }
 
-    private double[][] tableToDouble(String[][] table) {
+    protected double[][] tableToDouble(String[][] table) {
         double[][] doubleTable = new double[table.length-1][table[0].length]; //First row are comments
         for (int i = 1; i < table.length; i++) {
             for (int j = 0; j < table[0].length; j++) {
