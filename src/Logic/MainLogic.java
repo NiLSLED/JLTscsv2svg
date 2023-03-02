@@ -1,3 +1,5 @@
+package Logic;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,11 +9,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class Main {
+public class MainLogic {
     public static void main(String[] args) {
         System.out.println(args[0]);
         System.out.println(args[1]);
-        new Main().basicCsvToSvg(args[0],args[1]);
+        new MainLogic().basicCsvToSvg(args[0],args[1]);
     }
 
     public void basicCsvToSvg(String pathCsv, String pathSvg) {
@@ -36,7 +38,7 @@ public class Main {
         writer.close();
     }
 
-    protected String[][] readTableFile(String filePath) {
+    public String[][] readTableFile(String filePath) {
         File file = new File(filePath);
         Scanner lineScanner = null;
         try {
@@ -87,7 +89,7 @@ public class Main {
         return tableArray;
     }
 
-    protected double[][] tableToDouble(String[][] table) {
+    public double[][] tableToDouble(String[][] table) {
         double[][] doubleTable = new double[table.length-1][table[0].length]; //First row are comments
         for (int i = 1; i < table.length; i++) {
             for (int j = 0; j < table[0].length; j++) {
@@ -118,7 +120,7 @@ public class Main {
         return Math.round(pixels*(value/to)*100)/100f; //round to two digits
     }
 
-    private double maxValueInColumn(double[][] table, int column) {
+    public double maxValueInColumn(double[][] table, int column) {
         double max = -Double.MAX_VALUE;
         for (double[] row : table) {
             if (row[column] > max) {
@@ -128,7 +130,7 @@ public class Main {
         return max;
     }
 
-    private double minValueInColumn(double[][] table, int column) {
+    public double minValueInColumn(double[][] table, int column) {
         double min = Double.MAX_VALUE;
         for (double[] row : table) {
             if (row[column] < min) {

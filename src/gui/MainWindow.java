@@ -1,6 +1,7 @@
 package gui;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class MainWindow extends JFrame {
@@ -10,6 +11,9 @@ public class MainWindow extends JFrame {
     ArrayList<AxisGUI> axisGUIS;
     JTextField svgFilePath;
     JButton export;
+    double[][] dataTable;
+    String[][] dataTableString;
+    Logic.MainLogic logic = new Logic.MainLogic();
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -24,7 +28,7 @@ public class MainWindow extends JFrame {
     }
 
     public MainWindow(String cvsFile) {
-        super("JLTscsv2svg");
+        super();
         super.setLayout(null);
         dataGUIS = new ArrayList<>();
         axisGUIS = new ArrayList<>();
@@ -52,9 +56,14 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Loads data initial into {@link MainWindow#dataGUIS} and {@link MainWindow#axisGUIS}
+     * Loads data initial into {@link MainWindow#dataGUIS} and {@link MainWindow#axisGUIS}.
+     * It opens the file specified by {@link MainWindow#svgFilePath} and phrases its content.
      */
     private void loadData() {
+        dataGUIS.clear();
+        axisGUIS.clear();
+        dataTableString = logic.readTableFile(csvFilePath.getText());
+        dataTable = logic.tableToDouble(dataTableString);
         loadIntoAxisGUI();
         loadIntoDataGUI();
         reRender();
@@ -69,13 +78,29 @@ public class MainWindow extends JFrame {
             super.add(axisGUIS.get(i));
             axisGUIS.get(i).setLocation(10, (1+i+dataGUIS.size())*40);
         }
+        System.out.println("finish reRender");
     }
 
+    /**
+     * Initializes {@link MainWindow#dataGUIS} it depends on {@link MainWindow#dataTable} and {@link MainWindow#dataTableString}
+     */
     private void loadIntoDataGUI() {
+        for (int i = 0; i < dataTableString[0].length; i++) {
+            DataGUI dataGUI = new DataGUI();
+            dataGUI.setBasics(dataTableString[0][i],i, logic.minValueInColumn(dataTable, i), logic.maxValueInColumn(dataTable, i));
+            dataGUIS.add(dataGUI);
 
+        }
     }
 
+    /**
+     * Initializes {@link MainWindow#axisGUIS} it depends on {@link MainWindow#dataTable} and {@link MainWindow#dataTableString}
+     */
     private void loadIntoAxisGUI() {
-
+        for (int i = 1; i < dataTableString[0].length; i++) {
+            AxisGUI axisGUI = new AxisGUI();
+            axisGUIS.add(axisGUI);
+            axisGUI.setBasic(dataTableString[0][i], logic.minValueInColumn(dataTable, i), logic.maxValueInColumn(dataTable, i));
+        }
     }
 }

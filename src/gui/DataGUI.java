@@ -8,7 +8,7 @@ import java.awt.event.FocusListener;
 /**
  * A {@link JFrame} that is intended to be used as sub frame. It represents colum in the file or a part if it is stepped
  */
-public class DataGUI extends JFrame {
+public class DataGUI extends JPanel {
 
     public static void main(String[] args) {
         //FOR TESTING!
