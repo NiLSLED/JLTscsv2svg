@@ -60,6 +60,7 @@ public class MainWindow extends JFrame {
      * It opens the file specified by {@link MainWindow#svgFilePath} and phrases its content.
      */
     private void loadData() {
+        System.out.println("starting loadData");
         dataGUIS.clear();
         axisGUIS.clear();
         dataTableString = logic.readTableFile(csvFilePath.getText());
@@ -78,6 +79,8 @@ public class MainWindow extends JFrame {
             super.add(axisGUIS.get(i));
             axisGUIS.get(i).setLocation(10, (1+i+dataGUIS.size())*40);
         }
+        svgFilePath.setLocation(10, (2+dataGUIS.size()+ axisGUIS.size()) *40);
+        svgFilePath.setSize(300, 20);
         System.out.println("finish reRender");
     }
 
@@ -89,7 +92,6 @@ public class MainWindow extends JFrame {
             DataGUI dataGUI = new DataGUI();
             dataGUI.setBasics(dataTableString[0][i],i, logic.minValueInColumn(dataTable, i), logic.maxValueInColumn(dataTable, i));
             dataGUIS.add(dataGUI);
-
         }
     }
 
@@ -99,8 +101,8 @@ public class MainWindow extends JFrame {
     private void loadIntoAxisGUI() {
         for (int i = 1; i < dataTableString[0].length; i++) {
             AxisGUI axisGUI = new AxisGUI();
-            axisGUIS.add(axisGUI);
             axisGUI.setBasic(dataTableString[0][i], logic.minValueInColumn(dataTable, i), logic.maxValueInColumn(dataTable, i));
+            axisGUIS.add(axisGUI);
         }
     }
 }

@@ -6,7 +6,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 /**
- * A {@link JFrame} that is intended to be used as sub frame. It represents colum in the file or a part if it is stepped
+ * A {@link JPanel} that is intended to be used as sub frame. It represents colum in the file or a part if it is stepped
  */
 public class DataGUI extends JPanel {
 
@@ -42,8 +42,8 @@ public class DataGUI extends JPanel {
         name = new JTextField();
         name.setLocation(10,10);
         name.setSize(60,20);
-        name.addActionListener(e -> update());
-        name.addFocusListener(focusListener);
+        //name.addActionListener(e -> update());
+        //name.addFocusListener(focusListener);
         this.add(name);
 
         useAxis = new JLabel("useAxis:");
@@ -70,8 +70,8 @@ public class DataGUI extends JPanel {
             colors[i] = new JTextField("0");
             colors[i].setSize(30,20);
             colors[i].setLocation(215+50*i,10);
-            colors[i].addActionListener(e -> update());
-            colors[i].addFocusListener(focusListener);
+            //colors[i].addActionListener(e -> update());
+            //colors[i].addFocusListener(focusListener);
             this.add(colors[i]);
         }
 
