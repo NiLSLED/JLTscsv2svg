@@ -10,6 +10,11 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class MainLogic {
+    private int pixelX;
+    private int pixelY;
+    private double[][] data;
+    private double[][] axis;
+    private StringBuilder build;
     public static void main(String[] args) {
         System.out.println(args[0]);
         System.out.println(args[1]);
@@ -260,5 +265,36 @@ public class MainLogic {
         String[][] tableArray = new String[table.size()][];
         tableArray = table.toArray(tableArray);
         return tableArray;
+    }
+
+    public void startBuild(int pixelX, int pixelY, double[][] data, double[][] axis) {
+        this.pixelX = pixelX;
+        this.pixelY = pixelY;
+        this.axis = axis;
+        this.data = data;
+        build = new StringBuilder("<svg version=\"1.1\"\n\twidth=\""+ pixelX +"\" height=\""+pixelY+"\"\n\txmlns=\"http://www.w3.org/2000/svg\">\n\n");
+    }
+
+    public void addData(int[] color, int colum, int axisNumber) {
+        build.append("\t");
+        build.append(generatePolyline(pixelX, pixelY, axis[0][0], axis[0][1], axis[axisNumber][0], axis[axisNumber][1], convertSVGColor(color), data, colum));
+        build.append("\n");
+    }
+
+    public void exportBuild(String svgPath) {
+        build.append("</svg>\n");
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(svgPath, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        writer.print(build);
+        writer.close();
+
+    }
+
+    private String convertSVGColor(int[] color) {
+        return "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
     }
 }

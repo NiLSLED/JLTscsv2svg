@@ -63,4 +63,8 @@ public class AxisGUI extends JPanel {
         this.to.setText(Double.toString(to));
         this.setVisible(true);
     }
+
+    public double[] getAxisData() {
+        return new double[] {Double.parseDouble(from.getText()), Double.parseDouble(from.getText())};
+    }
 }

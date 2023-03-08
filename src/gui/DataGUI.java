@@ -114,4 +114,8 @@ public class DataGUI extends JPanel {
         data[4] = colors[2].getText();
         return data;
     }
+
+    public int[] getColor() {
+        return new int[] {Integer.decode(colors[0].getText()), Integer.decode(colors[1].getText()), Integer.decode(colors[2].getText())};
+    }
 }
