@@ -122,7 +122,14 @@ public class MainLogic {
     private float getRelative(int pixels, double from, double to, double value) {
         to -= from;
         value -= from;
-        return Math.round(pixels*(value/to)*100)/100f; //round to two digits
+        float relative = Math.round(pixels*(value/to)*100)/100f; //round to two digits
+        if (relative< 0) {
+            return 0;
+        } else if (relative > pixels) {
+            return pixels;
+        } else {
+            return relative;
+        }
     }
 
     public double maxValueInColumn(double[][] table, int column) {

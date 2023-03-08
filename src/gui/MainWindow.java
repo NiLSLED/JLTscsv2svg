@@ -35,7 +35,7 @@ public class MainWindow extends JFrame {
         super.setSize(600, 100);
 
         csvFilePath = new JTextField(cvsFile);
-        csvFilePath.setText("/home/nils/Dokumente/Uni/2/PR_ST/Draft5.txt");
+        csvFilePath.setText("/home/nils/Dokumente/Uni/2/PR_ST/Draft4.txt");
         csvFilePath.setLocation(10,10);
         csvFilePath.setSize(300,20);
         super.add(csvFilePath);
