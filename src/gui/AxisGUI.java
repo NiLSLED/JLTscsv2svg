@@ -40,9 +40,9 @@ public class AxisGUI extends JPanel {
         this.add(labelFrom);
 
         from = new JTextField();
-        from.setText("From:");
-        from.setLocation(290, 10);
-        from.setSize(50, 20);
+        from.setLocation(270, 10);
+        from.setText("0");
+        from.setSize(70, 20);
         this.add(from);
 
         labelTo = new JLabel();
@@ -52,8 +52,9 @@ public class AxisGUI extends JPanel {
         this.add(labelTo);
 
         to = new JTextField();
-        to.setSize(50, 20);
-        to.setLocation(400, 10);
+        to.setSize(70, 20);
+        to.setLocation(380, 10);
+        to.setText("1");
         this.add(to);
     }
 
@@ -67,4 +68,5 @@ public class AxisGUI extends JPanel {
     public double[] getAxisData() {
         return new double[] {Double.parseDouble(from.getText()), Double.parseDouble(to.getText())};
     }
+
 }

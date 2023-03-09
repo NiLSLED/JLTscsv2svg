@@ -77,6 +77,12 @@ public class MainWindow extends JFrame {
      * It opens the file specified by {@link MainWindow#svgFilePath} and phrases its content.
      */
     private void loadData() {
+        for (DataGUI gui: dataGUIS) {
+            super.remove(gui);
+        }
+        for (AxisGUI gui: axisGUIS) {
+            super.remove(gui);
+        }
         dataGUIS.clear();
         axisGUIS.clear();
         dataTableString = logic.readTableFile(csvFilePath.getText());
@@ -102,6 +108,7 @@ public class MainWindow extends JFrame {
         exportButton.setLocation(350,(2+dataGUIS.size()+axisGUIS.size())*40);
         svgFilePath.setVisible(true);
         exportButton.setVisible(true);
+        super.setSize(700, (4+dataGUIS.size()+axisGUIS.size())*40);
     }
 
     /**
@@ -123,13 +130,18 @@ public class MainWindow extends JFrame {
             AxisGUI axisGUI = new AxisGUI();
             axisGUI.setBasic(dataTableString[0][i], logic.minValueInColumn(dataTable, i), logic.maxValueInColumn(dataTable, i));
             axisGUIS.add(axisGUI);
+            if (i == 0) {
+                axisGUI.titleName.setText("y");
+            } else {
+                axisGUI.titleName.setText("x"+i);
+            }
         }
     }
 
     private void export() {
         logic.startBuild(900, 600, dataTable, getAxisData());
         for (int i = 1; i < dataGUIS.size(); i++) {
-            logic.addData(dataGUIS.get(i).getColor(), i, i);
+            logic.addData(dataGUIS.get(i).getColor(), i, dataGUIS.get(i).getAxis());
         }
         logic.exportBuild(svgFilePath.getText());
     }
