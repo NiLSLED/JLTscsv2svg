@@ -47,7 +47,7 @@ public class MainLogic {
         File file = new File(filePath);
         Scanner lineScanner = null;
         try {
-            lineScanner = new Scanner(file);
+            lineScanner = new Scanner(file, "ISO-8859-15");
         } catch (FileNotFoundException e) {
             System.err.println("file not found: "+filePath);
             return null;
@@ -104,22 +104,27 @@ public class MainLogic {
         return doubleTable;
     }
 
-    private String generatePolyline(int pixelX, int pixelY, double fromX, double toX, double fromY, double toY, String color, double[][] data, int colum) {
+    private String generatePolylineLogarithmic(int pixelX, int pixelY, double fromX, double toX, double fromY, double toY, String color, double[][] data, int colum, boolean logarithmicX, boolean logarithmicY) {
         StringBuilder polyline = new StringBuilder();
         polyline.append("<polyline stroke=\"");
         polyline.append(color);
         polyline.append("\" fill=\"transparent\" points=\"");
         for (double[] datum : data) {
-            polyline.append(getRelative(pixelX, fromX, toX, datum[0]));
+            polyline.append(getLogarithmicRelative(pixelX, fromX, toX, datum[0], logarithmicX));
             polyline.append(",");
-            polyline.append(pixelY-getRelative(pixelY, fromY, toY, datum[colum]));
+            polyline.append(pixelY-getLogarithmicRelative(pixelY, fromY, toY, datum[colum], logarithmicY));
             polyline.append(" ");
         }
         polyline.append("\"/>\n");
         return polyline.toString();
     }
 
-    private float getRelative(int pixels, double from, double to, double value) {
+    private String generatePolyline(int pixelX, int pixelY, double fromX, double toX, double fromY, double toY, String color, double[][] data, int colum) {
+        return generatePolylineLogarithmic(pixelX, pixelY, fromX, toX, fromY, toY, color, data, colum, false, false);
+    }
+
+
+        private float getRelative(int pixels, double from, double to, double value) {
         to -= from;
         value -= from;
         float relative = Math.round(pixels*(value/to)*100)/100f; //round to two digits
@@ -130,6 +135,15 @@ public class MainLogic {
         } else {
             return relative;
         }
+    }
+
+    private float getLogarithmicRelative(int pixels, double from, double to, double value, boolean logarithmic) {
+        if (logarithmic) {
+            value = Math.log10(value);
+            from = Math.log10(from);
+            to = Math.log10(to);
+        }
+        return getRelative(pixels, from, to, value);
     }
 
     public double maxValueInColumn(double[][] table, int column) {
@@ -156,7 +170,7 @@ public class MainLogic {
         File file = new File(filePath);
         Scanner lineScanner = null;
         try {
-            lineScanner = new Scanner(file);
+            lineScanner = new Scanner(file, "ISO-8859-15");
         } catch (FileNotFoundException e) {
             System.err.println("file not found: "+filePath);
             return null;
@@ -237,7 +251,7 @@ public class MainLogic {
         File file = new File(filePath);
         Scanner lineScanner = null;
         try {
-            lineScanner = new Scanner(file);
+            lineScanner = new Scanner(file, "ISO-8859-15");
         } catch (FileNotFoundException e) {
             System.err.println("file not found: "+filePath);
             return null;
@@ -283,6 +297,9 @@ public class MainLogic {
     }
 
     public void addData(int[] color, int colum, int axisNumber) {
+        addDataLogarithmic(color, colum, axisNumber, false);
+    }
+    public void addDataLogarithmic(int[] color, int colum, int axisNumber, boolean logarithmic) {
         build.append("\t");
         build.append(generatePolyline(pixelX, pixelY, axis[0][0], axis[0][1], axis[axisNumber][0], axis[axisNumber][1], convertSVGColor(color), data, colum));
         build.append("\n");

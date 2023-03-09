@@ -64,6 +64,7 @@ public class MainWindow extends JFrame {
         super.add(exportButton);
 
         super.setVisible(true);
+        super.setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     private void addAxis() {

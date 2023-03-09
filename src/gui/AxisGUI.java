@@ -18,6 +18,8 @@ public class AxisGUI extends JPanel {
     JLabel labelTo;
     JTextField to;
 
+    JCheckBox logCheckBox;
+
     public AxisGUI() {
         super();
         this.setLayout(null);
@@ -56,6 +58,11 @@ public class AxisGUI extends JPanel {
         to.setLocation(380, 10);
         to.setText("1");
         this.add(to);
+
+        logCheckBox = new JCheckBox("log");
+        logCheckBox.setSize(50, 20);
+        logCheckBox.setLocation(470, 10);
+        this.add(logCheckBox);
     }
 
     public void setBasic(String name, double from, double to) {
