@@ -14,14 +14,14 @@ public class DataGUI extends JPanel {
         //FOR TESTING!
         new DataGUI().setBasics("I", 0, 0,1);
     }
-    JTextField name; //Name of column
-    JLabel useAxis;
-    JTextField axisName;
-    JLabel[] rgbLabels;
-    JTextField[] colors; //RGB
-    JLabel preview;
-    JLabel labelFrom;
-    JLabel labelTo;
+    private final JTextField name; //Name of column
+    private final JLabel useAxis;
+    private final JTextField axisName;
+    private final JLabel[] rgbLabels;
+    private final JTextField[] colors; //RGB
+    private final JLabel preview;
+    private final JLabel labelFrom;
+    private final JLabel labelTo;
 
     public DataGUI() {
         super();
@@ -42,8 +42,8 @@ public class DataGUI extends JPanel {
         name = new JTextField();
         name.setLocation(10,10);
         name.setSize(60,20);
-        //name.addActionListener(e -> update());
-        //name.addFocusListener(focusListener);
+        name.addActionListener(e -> update());
+        name.addFocusListener(focusListener);
         this.add(name);
 
         useAxis = new JLabel("useAxis:");
@@ -70,8 +70,8 @@ public class DataGUI extends JPanel {
             colors[i] = new JTextField("0");
             colors[i].setSize(30,20);
             colors[i].setLocation(215+50*i,10);
-            //colors[i].addActionListener(e -> update());
-            //colors[i].addFocusListener(focusListener);
+            colors[i].addActionListener(e -> update());
+            colors[i].addFocusListener(focusListener);
             this.add(colors[i]);
         }
 
@@ -96,27 +96,33 @@ public class DataGUI extends JPanel {
         this.axisName.setText(String.valueOf(axisNumber));
         labelFrom.setText("from: "+from);
         labelTo.setText("to: "+to);
+        update();
         this.setVisible(true);
     }
 
     private void update() {
-        System.out.println("update");
         preview.setText(name.getText());
-        preview.setForeground(new Color(Integer.decode(colors[0].getText()), Integer.decode(colors[1].getText()), Integer.decode(colors[2].getText())));
-    }
-
-    String[] collectData() {
-        String[] data = new String[5];
-        data[0] = name.getText();
-        data[1] = axisName.getText();
-        data[2] = colors[0].getText();
-        data[3] = colors[1].getText();
-        data[4] = colors[2].getText();
-        return data;
+        int[] color = getColor();
+        preview.setForeground(new Color(color[0], color[1], color[2]));
     }
 
     public int[] getColor() {
-        return new int[] {Integer.decode(colors[0].getText()), Integer.decode(colors[1].getText()), Integer.decode(colors[2].getText())};
+        int[] color = new int[3];
+        for (int i = 0; i < 3; i++) {
+            try {
+                color[i] = Integer.decode(colors[i].getText());
+                if (color[i] > 255) {
+                    colors[i].setText("255");
+                    color[i] = 255;
+                } else if (color[i] < 0) {
+                    colors[i].setText("0");
+                    color[i] = 0;
+                }
+            } catch (NumberFormatException ignored) {
+                colors[i].setText("0");
+            }
+        }
+        return color;
     }
 
     public int getAxis() {

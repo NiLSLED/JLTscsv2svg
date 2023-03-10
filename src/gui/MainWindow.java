@@ -35,7 +35,9 @@ public class MainWindow extends JFrame {
         super.setSize(600, 100);
 
         csvFilePath = new JTextField(cvsFile);
-        csvFilePath.setText("/home/nils/Dokumente/Uni/2/PR_ST/Draft4.txt");
+        if (cvsFile != null) {
+            csvFilePath.setText(cvsFile);
+        }
         csvFilePath.setLocation(10,10);
         csvFilePath.setSize(300,20);
         super.add(csvFilePath);
@@ -132,15 +134,15 @@ public class MainWindow extends JFrame {
             axisGUI.setBasic(dataTableString[0][i], logic.minValueInColumn(dataTable, i), logic.maxValueInColumn(dataTable, i));
             axisGUIS.add(axisGUI);
             if (i == 0) {
-                axisGUI.titleName.setText("y");
+                axisGUI.setTitle("y");
             } else {
-                axisGUI.titleName.setText("x"+i);
+                axisGUI.setTitle("x"+i);
             }
         }
     }
 
     private void export() {
-        logic.startBuild(900, 600, dataTable, getAxisData());
+        logic.startBuild(900, 600, dataTable, getAxisData(), axisGUIS.get(0).isLogarithmic());
         for (int i = 1; i < dataGUIS.size(); i++) {
             logic.addData(dataGUIS.get(i).getColor(), i, dataGUIS.get(i).getAxis());
         }

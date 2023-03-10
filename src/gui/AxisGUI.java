@@ -11,12 +11,12 @@ public class AxisGUI extends JPanel {
         //FOR TESTING!
         new AxisGUI().setBasic("V", 0, 1);
     }
-    JLabel titleName;
-    JTextField name;
-    JLabel labelFrom;
-    JTextField from;
-    JLabel labelTo;
-    JTextField to;
+    private final JLabel titleName;
+    private final JTextField name;
+    private JLabel labelFrom;
+    private final JTextField from;
+    private JLabel labelTo;
+    private JTextField to;
 
     JCheckBox logCheckBox;
 
@@ -76,4 +76,11 @@ public class AxisGUI extends JPanel {
         return new double[] {Double.parseDouble(from.getText()), Double.parseDouble(to.getText())};
     }
 
+    public boolean isLogarithmic() {
+        return logCheckBox.isSelected();
+    }
+
+    public void setTitle(String title) {
+        titleName.setText(title);
+    }
 }

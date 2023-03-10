@@ -15,6 +15,7 @@ public class MainLogic {
     private double[][] data;
     private double[][] axis;
     private StringBuilder build;
+    private boolean logarithmicX;
     public static void main(String[] args) {
         System.out.println(args[0]);
         System.out.println(args[1]);
@@ -33,7 +34,7 @@ public class MainLogic {
             svg.append("\n");
         }
         svg.append("</svg>\n");
-        PrintWriter writer = null;
+        PrintWriter writer;
         try {
             writer = new PrintWriter(pathSvg, StandardCharsets.UTF_8);
         } catch (IOException e) {
@@ -45,7 +46,7 @@ public class MainLogic {
 
     public String[][] readTableFile(String filePath) {
         File file = new File(filePath);
-        Scanner lineScanner = null;
+        Scanner lineScanner;
         try {
             lineScanner = new Scanner(file, "ISO-8859-15");
         } catch (FileNotFoundException e) {
@@ -124,7 +125,7 @@ public class MainLogic {
     }
 
 
-        private float getRelative(int pixels, double from, double to, double value) {
+    private float getRelative(int pixels, double from, double to, double value) {
         to -= from;
         value -= from;
         float relative = Math.round(pixels*(value/to)*100)/100f; //round to two digits
@@ -168,7 +169,7 @@ public class MainLogic {
 
     private String[][] readTableFileWithStep(String filePath) {
         File file = new File(filePath);
-        Scanner lineScanner = null;
+        Scanner lineScanner;
         try {
             lineScanner = new Scanner(file, "ISO-8859-15");
         } catch (FileNotFoundException e) {
@@ -288,11 +289,12 @@ public class MainLogic {
         return tableArray;
     }
 
-    public void startBuild(int pixelX, int pixelY, double[][] data, double[][] axis) {
+    public void startBuild(int pixelX, int pixelY, double[][] data, double[][] axis, boolean log) {
         this.pixelX = pixelX;
         this.pixelY = pixelY;
         this.axis = axis;
         this.data = data;
+        this.logarithmicX = log;
         build = new StringBuilder("<svg version=\"1.1\"\n\twidth=\""+ pixelX +"\" height=\""+pixelY+"\"\n\txmlns=\"http://www.w3.org/2000/svg\">\n\n");
     }
 
@@ -301,7 +303,7 @@ public class MainLogic {
     }
     public void addDataLogarithmic(int[] color, int colum, int axisNumber, boolean logarithmic) {
         build.append("\t");
-        build.append(generatePolyline(pixelX, pixelY, axis[0][0], axis[0][1], axis[axisNumber][0], axis[axisNumber][1], convertSVGColor(color), data, colum));
+        build.append(generatePolylineLogarithmic(pixelX, pixelY, axis[0][0], axis[0][1], axis[axisNumber][0], axis[axisNumber][1], convertSVGColor(color), data, colum,logarithmicX, logarithmic));
         build.append("\n");
     }
 
